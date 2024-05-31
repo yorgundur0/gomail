@@ -1,4 +1,4 @@
-module github.com/gophish/gomail
+module github.com/yorgundur0/gomail
 
 go 1.13
 
