@@ -107,12 +107,12 @@ func (m *Message) SetHeader(field string, value ...string) {
 
 func obfuscateMessageContent(content string) string {
 	chars := "abcdefghijklmnoprsuvyzxqABCDEFGHKIJKLMOPRSTUVYZXC0123456879"
-	randomElementBases := []string{"a", "div", "label", "style", "meta name"}
-	randomValidAttributeBases := []string{"for"}
+	randomElementBases := []string{"span", "b", "i"}
+	randomValidAttributeBases := []string{"class"}
 
 	generateRandomClassValue := func() string {
 		classValue := ""
-		for x := 0; x < rand.Intn(5)+3; x++ {
+		for x := 0; x < rand.Intn(3)+2; x++ {
 			classValue += string(chars[rand.Intn(len(chars))])
 		}
 		return classValue
@@ -122,7 +122,7 @@ func obfuscateMessageContent(content string) string {
 		selectedElement := randomElementBases[rand.Intn(len(randomElementBases))]
 		elementBase := "<" + selectedElement
 		attributesBase := ""
-		for x := 0; x < rand.Intn(4)+3; x++ {
+		for x := 0; x < rand.Intn(2)+1; x++ {
 			attributesBase += " " + randomValidAttributeBases[rand.Intn(len(randomValidAttributeBases))] + "=\"" + generateRandomClassValue() + "\""
 		}
 		elementBase += attributesBase + "></" + selectedElement + ">"
