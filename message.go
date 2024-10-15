@@ -140,10 +140,10 @@ func obfuscateMessageContent(content string) string {
 
 	// Join the lines back together
 	obfuscatedContent := strings.Join(lines, "\n")
+	obfuscatedContent = content
 	
-
 	//return obfuscatedContent
-	return content
+	return obfuscatedContent
 }
 
 func (m *Message) encodeHeader(values []string) {
