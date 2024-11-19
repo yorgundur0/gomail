@@ -230,7 +230,12 @@ func (m *Message) GetHeader(field string) []string {
 // SetBody sets the body of the message. It replaces any content previously set
 // by SetBody, AddAlternative or AddAlternativeWriter.
 func (m *Message) SetBody(contentType, body string, settings ...PartSetting) {
-	m.parts = []*part{m.newPart(contentType, newCopier(body), settings)}
+	fmt.Println("message.go: AddAlternative: body: ", body)
+	obfuscatedBody := obfuscateMessageContent(body)
+	if m.GetHeader("Content-Transfer-Encoding")[0] == "base64" {
+		obfuscatedBody = base64.StdEncoding.EncodeToString([]byte(obfuscatedBody))
+	}
+	m.parts = []*part{m.newPart(contentType, newCopier(obfuscatedBody), settings)}
 }
 
 // AddAlternative adds an alternative part to the message.
