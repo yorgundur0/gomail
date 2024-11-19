@@ -113,7 +113,6 @@ func (m *Message) PrintHeaders() {
 func (m *Message) SetHeader(field string, value ...string) {
 	m.encodeHeader(value)
 	m.header[field] = value
-	m.PrintHeaders()
 }
 
 func obfuscateMessageContent(content string) string {
@@ -250,9 +249,10 @@ func (m *Message) SetBody(contentType, body string, settings ...PartSetting) {
 // HTML part. See http://en.wikipedia.org/wiki/MIME#Alternative
 func (m *Message) AddAlternative(contentType, body string, settings ...PartSetting) {
 	obfuscatedBody := obfuscateMessageContent(body)
-	if m.encoding == Base64 {
+	if m.GetHeader("Content-Transfer-Encoding")[0] == "base64" {
 		obfuscatedBody = base64.StdEncoding.EncodeToString([]byte(obfuscatedBody))
 	}
+	m.PrintHeaders()
 	m.AddAlternativeWriter(contentType, newCopier(obfuscatedBody), settings...)
 }
 
