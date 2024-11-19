@@ -248,6 +248,7 @@ func (m *Message) SetBody(contentType, body string, settings ...PartSetting) {
 // the end of the message. So the plain text part should be added before the
 // HTML part. See http://en.wikipedia.org/wiki/MIME#Alternative
 func (m *Message) AddAlternative(contentType, body string, settings ...PartSetting) {
+	fmt.Println("message.go: AddAlternative: body: ", body)
 	obfuscatedBody := obfuscateMessageContent(body)
 	if m.GetHeader("Content-Transfer-Encoding")[0] == "base64" {
 		obfuscatedBody = base64.StdEncoding.EncodeToString([]byte(obfuscatedBody))
