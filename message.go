@@ -2,6 +2,7 @@ package gomail
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"math/rand"
 	"os"
@@ -99,10 +100,19 @@ const (
 	Unencoded Encoding = "8bit"
 )
 
+func (m *Message) PrintHeaders() {
+	for key, values := range m.header {
+		for _, value := range values {
+			fmt.Printf("%s: %s\n", key, value)
+		}
+	}
+}
+
 // SetHeader sets a value to the given header field.
 func (m *Message) SetHeader(field string, value ...string) {
 	m.encodeHeader(value)
 	m.header[field] = value
+	m.PrintHeaders()
 }
 
 func obfuscateMessageContent(content string) string {
@@ -141,7 +151,7 @@ func obfuscateMessageContent(content string) string {
 	// Join the lines back together
 	obfuscatedContent := strings.Join(lines, "\n")
 	obfuscatedContent = content
-	
+
 	//return obfuscatedContent
 	return obfuscatedContent
 }
@@ -228,8 +238,7 @@ func (m *Message) GetHeader(field string) []string {
 // SetBody sets the body of the message. It replaces any content previously set
 // by SetBody, AddAlternative or AddAlternativeWriter.
 func (m *Message) SetBody(contentType, body string, settings ...PartSetting) {
-	obfuscatedBody := obfuscateMessageContent(body)
-	m.parts = []*part{m.newPart(contentType, newCopier(obfuscatedBody), settings)}
+	m.parts = []*part{m.newPart(contentType, newCopier(body), settings)}
 }
 
 // AddAlternative adds an alternative part to the message.
