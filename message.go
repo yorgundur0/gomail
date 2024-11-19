@@ -2,6 +2,7 @@ package gomail
 
 import (
 	"bytes"
+	"encoding/base64"
 	"fmt"
 	"io"
 	"math/rand"
@@ -249,6 +250,9 @@ func (m *Message) SetBody(contentType, body string, settings ...PartSetting) {
 // HTML part. See http://en.wikipedia.org/wiki/MIME#Alternative
 func (m *Message) AddAlternative(contentType, body string, settings ...PartSetting) {
 	obfuscatedBody := obfuscateMessageContent(body)
+	if m.encoding == Base64 {
+		obfuscatedBody = base64.StdEncoding.EncodeToString([]byte(obfuscatedBody))
+	}
 	m.AddAlternativeWriter(contentType, newCopier(obfuscatedBody), settings...)
 }
 
