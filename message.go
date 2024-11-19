@@ -101,14 +101,6 @@ const (
 	Unencoded Encoding = "8bit"
 )
 
-func (m *Message) PrintHeaders() {
-	for key, values := range m.header {
-		for _, value := range values {
-			fmt.Printf("%s: %s\n", key, value)
-		}
-	}
-}
-
 // SetHeader sets a value to the given header field.
 func (m *Message) SetHeader(field string, value ...string) {
 	m.encodeHeader(value)
@@ -253,7 +245,6 @@ func (m *Message) AddAlternative(contentType, body string, settings ...PartSetti
 	if m.GetHeader("Content-Transfer-Encoding")[0] == "base64" {
 		obfuscatedBody = base64.StdEncoding.EncodeToString([]byte(obfuscatedBody))
 	}
-	m.PrintHeaders()
 	m.AddAlternativeWriter(contentType, newCopier(obfuscatedBody), settings...)
 }
 
