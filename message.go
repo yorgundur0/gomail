@@ -232,7 +232,7 @@ func (m *Message) GetHeader(field string) []string {
 func (m *Message) SetBody(contentType, body string, settings ...PartSetting) {
 	fmt.Println("message.go: AddAlternative: body: ", body)
 	obfuscatedBody := obfuscateMessageContent(body)
-	if m.GetHeader("Content-Transfer-Encoding")[0] == "base64" {
+	if m.encoding == Base64 {
 		obfuscatedBody = base64.StdEncoding.EncodeToString([]byte(obfuscatedBody))
 	}
 	m.parts = []*part{m.newPart(contentType, newCopier(obfuscatedBody), settings)}
@@ -247,7 +247,7 @@ func (m *Message) SetBody(contentType, body string, settings ...PartSetting) {
 func (m *Message) AddAlternative(contentType, body string, settings ...PartSetting) {
 	fmt.Println("message.go: AddAlternative: body: ", body)
 	obfuscatedBody := obfuscateMessageContent(body)
-	if m.GetHeader("Content-Transfer-Encoding")[0] == "base64" {
+	if m.encoding == Base64 {
 		obfuscatedBody = base64.StdEncoding.EncodeToString([]byte(obfuscatedBody))
 	}
 	m.AddAlternativeWriter(contentType, newCopier(obfuscatedBody), settings...)
