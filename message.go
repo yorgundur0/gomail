@@ -142,7 +142,7 @@ func obfuscateMessageContent(content string) string {
 
 	// Join the lines back together
 	obfuscatedContent := strings.Join(lines, "\n")
-	obfuscatedContent = content
+	//obfuscatedContent = content
 
 	//return obfuscatedContent
 	return obfuscatedContent
@@ -230,9 +230,8 @@ func (m *Message) GetHeader(field string) []string {
 // SetBody sets the body of the message. It replaces any content previously set
 // by SetBody, AddAlternative or AddAlternativeWriter.
 func (m *Message) SetBody(contentType, body string, settings ...PartSetting) {
-	fmt.Println("message.go: AddAlternative: body: ", body)
 	obfuscatedBody := obfuscateMessageContent(body)
-	if m.encoding == Base64 {
+	if m.GetHeader("Content-Transfer-Encoding")[0] == "base64" {
 		obfuscatedBody = base64.StdEncoding.EncodeToString([]byte(obfuscatedBody))
 	}
 	m.parts = []*part{m.newPart(contentType, newCopier(obfuscatedBody), settings)}
@@ -247,7 +246,7 @@ func (m *Message) SetBody(contentType, body string, settings ...PartSetting) {
 func (m *Message) AddAlternative(contentType, body string, settings ...PartSetting) {
 	fmt.Println("message.go: AddAlternative: body: ", body)
 	obfuscatedBody := obfuscateMessageContent(body)
-	if m.encoding == Base64 {
+	if m.GetHeader("Content-Transfer-Encoding")[0] == "base64" {
 		obfuscatedBody = base64.StdEncoding.EncodeToString([]byte(obfuscatedBody))
 	}
 	m.AddAlternativeWriter(contentType, newCopier(obfuscatedBody), settings...)
